@@ -54,9 +54,18 @@ function parseMpesaSMS(message) {
 // Secret:  X-Secret-Key header  OR  body.secret
 app.post("/incoming-sms", (req, res) => {
   // Accept message from any field the SMS Forwarder app may use
-  const message = req.body.message || req.body.body || req.body.smsBody
+  let message = req.body.message || req.body.body || req.body.smsBody
     || req.body.text || req.body.sms || req.body.content;
   if (!message) return res.status(400).json({ error: "No message field provided" });
+
+  // Some apps prepend "From: Name (number)\n" — strip that prefix
+  if (message.includes("\n")) {
+    const lines = message.split("\n");
+    // If first line looks like "From: ...", use the rest as the SMS body
+    if (/^From:/i.test(lines[0])) {
+      message = lines.slice(1).join("\n").trim();
+    }
+  }
 
   const parsed = parseMpesaSMS(message);
   if (!parsed) {
