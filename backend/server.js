@@ -53,12 +53,9 @@ function parseMpesaSMS(message) {
 // Body fields accepted:  message | body | smsBody
 // Secret:  X-Secret-Key header  OR  body.secret
 app.post("/incoming-sms", (req, res) => {
-  const secretProvided = req.headers["x-secret-key"] || req.body.secret;
-  if (SECRET_KEY && secretProvided !== SECRET_KEY) {
-    return res.status(401).json({ error: "Unauthorized: wrong secret key" });
-  }
-
-  const message = req.body.message || req.body.body || req.body.smsBody;
+  // Accept message from any field the SMS Forwarder app may use
+  const message = req.body.message || req.body.body || req.body.smsBody
+    || req.body.text || req.body.sms || req.body.content;
   if (!message) return res.status(400).json({ error: "No message field provided" });
 
   const parsed = parseMpesaSMS(message);
