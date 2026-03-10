@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite --version)",
+      "Bash(npm install)",
+      "Bash(npm run dev -- --host)",
+      "Bash(npm run build)",
+      "Bash(python gerar_mapa.py)",
+      "Bash(pip install openpyxl)",
+      "Bash(npm install dexie)",
+      "Bash(node -e \":*)",
+      "Bash(start INICIAR.bat)",
+      "Bash(powershell -Command \"Compress-Archive -Path ''dist\\\\*'' -DestinationPath ''hostinger_upload.zip'' -Force\")",
+      "Bash(python -u -c \":*)",
+      "Bash(powershell -Command \"Remove-Item -Path ''hostinger_upload.zip'' -ErrorAction SilentlyContinue; Compress-Archive -Path ''dist\\\\*'' -DestinationPath ''hostinger_upload.zip'' -Force; \\(Get-Item ''hostinger_upload.zip''\\).length / 1KB\")",
+      "Bash(powershell -Command \"Remove-Item -Path ''hostinger_upload.zip'' -ErrorAction SilentlyContinue; Compress-Archive -Path ''dist\\\\*'' -DestinationPath ''hostinger_upload.zip'' -Force; ''{0:N0} KB'' -f \\(\\(Get-Item ''hostinger_upload.zip''\\).length / 1KB\\)\")",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(curl -s -X POST http://localhost:3001/incoming-sms -H \"Content-Type: application/json\" -H \"X-Secret-Key: escola123\" -d '{\"\"message\"\":\"\"ID da transacao: PP260310.1120.C87384. Recebeste 50.00MT de conta 874639983, nome: Guiwan Teodosio Castro as 11:20:25 de 10/03/2026. Conteudo: 1. O saldo da tua conta e 52.98MT. Em caso de duvida, liga 100. Obrigado!\"\"}')",
+      "Bash(curl -s -X POST http://localhost:3001/incoming-sms -H \"Content-Type: application/json\" -H \"X-Secret-Key: escola123\" --data-raw '{\"\"message\"\":\"\"ID da transacao: PP260310.1120.C87384. Recebeste 50.00MT de conta 874639983, nome: Guiwan Teodosio Castro as 11:20:25 de 10/03/2026. Conteudo: 1. O saldo da tua conta e 52.98MT.\"\"}')",
+      "Bash(curl -s http://localhost:3001/sms-payments)",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(powershell -Command \"Remove-Item -Path ''''hostinger_upload.zip'''' -ErrorAction SilentlyContinue; Compress-Archive -Path ''''dist\\\\*'''' -DestinationPath ''''hostinger_upload.zip'''' -Force; ''''{0:N0} KB'''' -f \\(\\(Get-Item ''''hostinger_upload.zip''''\\).length / 1KB\\)\")",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(gh auth:*)"
+    ]
+  }
+}
