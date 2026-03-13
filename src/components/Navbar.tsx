@@ -13,6 +13,7 @@ import {
   ClipboardList,
   CalendarCheck,
   UserCog,
+  Wallet,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 
@@ -130,6 +131,17 @@ const Navbar = ({ activePath, onNavigate }: NavbarProps) => {
             icon={<CalendarCheck className="h-4 w-4" />}
             label="Exames"
             active={activePath === '/exams'}
+            onNavigate={onNavigate}
+          />
+        )}
+
+        {/* Mensalidades — Admin + Secretary */}
+        {(isAdmin || isSecretary) && (
+          <NavLink
+            to="/mensalidades"
+            icon={<Wallet className="h-4 w-4" />}
+            label="Mensalidades"
+            active={activePath === '/mensalidades'}
             onNavigate={onNavigate}
           />
         )}

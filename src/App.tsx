@@ -17,6 +17,7 @@ import Grades from "./pages/Grades";
 import Exams from "./pages/Exams";
 import Staff from "./pages/Staff";
 import StaffForm from "./pages/StaffForm";
+import Mensalidades from "./pages/Mensalidades";
 import NotFound from "./pages/NotFound";
 
 import { StudentsProvider } from "./hooks/use-students";
@@ -53,6 +54,7 @@ const App = () => (
                       {/* Admin + Secretaria */}
                       <Route path="/students"    element={<ProtectedRoute allowedRoles={["Admin","Secretaria"]}><Students /></ProtectedRoute>} />
                       <Route path="/student/:id" element={<ProtectedRoute allowedRoles={["Admin","Secretaria"]}><StudentForm /></ProtectedRoute>} />
+                      <Route path="/mensalidades" element={<ProtectedRoute allowedRoles={["Admin","Secretaria"]}><Mensalidades /></ProtectedRoute>} />
                       <Route path="/payments"    element={<ProtectedRoute allowedRoles={["Admin","Secretaria"]}><PaymentHistory /></ProtectedRoute>} />
 
                       {/* Admin + Professor */}

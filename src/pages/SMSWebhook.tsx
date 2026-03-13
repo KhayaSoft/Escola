@@ -31,6 +31,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useStudents } from "@/hooks/use-students";
+import { usePayments } from "@/hooks/use-payments";
 import { Student } from "@/lib/types";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -74,7 +75,8 @@ const DEFAULT_BACKEND = "";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 const SMSWebhook = () => {
-  const { students, updateStudent } = useStudents();
+  const { students } = useStudents();
+  const { addPayment } = usePayments();
 
   const [backendUrl, setBackendUrl] = useState<string>(
     () => localStorage.getItem(BACKEND_URL_KEY) || DEFAULT_BACKEND
@@ -150,12 +152,13 @@ const SMSWebhook = () => {
     }
 
     const monthKey = monthKeyFromSmsDate(payment.sms_date);
-    const updated: Student = {
-      ...student,
-      paymentStatus: { ...student.paymentStatus, [monthKey]: "Pago" },
-    };
 
-    await updateStudent(updated);
+    // Record payment with debt/credit logic
+    const balance = await addPayment(student, payment.amount, monthKey, "sms", {
+      transactionId: payment.transaction_id ?? undefined,
+      senderPhone: payment.sender_account,
+      date: payment.received_at,
+    });
 
     // Mark as confirmed on the backend
     await fetch(`${backendUrl}/sms-payments/${payment.id}/confirm`, { method: "POST" });
@@ -164,10 +167,21 @@ const SMSWebhook = () => {
       prev.map((p) => (p.id === payment.id ? { ...p, status: "confirmed" } : p))
     );
 
-    toast({
-      title: "Pagamento confirmado!",
-      description: `${student.name} — ${monthKey} marcado como Pago (${payment.amount.toFixed(2)} MT).`,
-    });
+    const diff = balance.balance;
+    if (diff >= 0) {
+      toast({
+        title: "Pagamento confirmado!",
+        description: diff > 0
+          ? `${student.name} — Pago! Crédito de ${diff.toFixed(2)} MT passa para o próximo mês.`
+          : `${student.name} — Mensalidade ${monthKey} quitada (${payment.amount.toFixed(2)} MT).`,
+      });
+    } else {
+      toast({
+        title: "Pagamento parcial confirmado",
+        description: `${student.name} — Pago ${payment.amount.toFixed(2)} MT. Ainda deve ${Math.abs(diff).toFixed(2)} MT.`,
+        variant: "destructive",
+      });
+    }
   };
 
   // ── Dismiss ───────────────────────────────────────────────────────────────
@@ -254,7 +268,7 @@ const SMSWebhook = () => {
                   <li>Method: <strong>POST</strong></li>
                   <li>URL: a URL acima</li>
                   <li>Header: <code>X-Secret-Key: escola123</code></li>
-                  <li>Body (JSON): <code>{`{"message":"%sms_body%"}`}</code></li>
+                  <li>Body (JSON): <code>{`{"message":"%message%"}`}</code></li>
                 </ul>
               </div>
             </CardContent>

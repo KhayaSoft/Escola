@@ -7,10 +7,25 @@ export interface Student {
   gender?: "M" | "F";
   situation?: "Antigo" | "Novo Ingresso";
   parentPhones: string[];
+  monthlyFee: number;    // mensalidade em MT
+  discountPercent?: number; // ex: 50 para desconto de 50%
   paymentStatus: { [key: string]: PaymentStatus };
 }
 
-export type PaymentStatus = "Pago" | "Em Falta";
+export type PaymentStatus = "Pago" | "Em Falta" | "Parcial";
+
+// Individual payment transaction
+export interface PaymentRecord {
+  id: string;
+  studentId: string;
+  amount: number;
+  date: string;          // ISO date string
+  monthKey: string;      // "M-YYYY" e.g. "3-2026"
+  source: "sms" | "manual";
+  transactionId?: string; // M-Pesa transaction ID
+  senderPhone?: string;
+  notes?: string;
+}
 
 export interface Subject {
   id: string;
